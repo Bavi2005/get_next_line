@@ -52,9 +52,9 @@ char	ft_strjoin(char const*s1, char const *s2)
 
 void	*ft_calloc(size_t nitems, size_t size)
 {
-	void		*a;
-	size_t		total;
-	size_t		i;
+	void			*a;
+	size_t			total;
+	size_t			i;
 	unsigned char	*ptr;
 
 	if (nitems != 0 && size > (size_t)-1 / nitems)
@@ -68,20 +68,6 @@ void	*ft_calloc(size_t nitems, size_t size)
 	while (i < total)
 		ptr[i++] = 0;
 	return (a);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	char	*str;
-	size_t	i;
-
-	str = (char *)s;
-	i = 0;
-	while (i < n)
-	{
-		str[i] = '\0';
-		i++;
-	}
 }
 
 char	*ft_strchr(const char *s, int c)
