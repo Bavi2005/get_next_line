@@ -5,68 +5,131 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpichyal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/07 13:28:49 by bpichyal          #+#    #+#             */
-/*   Updated: 2025/06/10 14:45:44 by bpichyal         ###   ########.fr       */
+/*   Created: 2025/06/14 14:51:07 by bpichyal          #+#    #+#             */
+/*   Updated: 2025/06/14 14:51:09 by bpichyal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_free(char *buffer, char *buff)
+char	*read_file(int fd, char *bowl)
 {
-	char	*bufffull;
+	char	*bucket;
+	int	byte_read;
 
-	bufffull = ft_strjoin(buffer, buff);
-	free(buffer);
-	return (bufffull);
+	byte_read = 1;
+	bucket = malloc(BUFFER_SIZE + 1);
+	if (!bucket)
+		return (NULL);
+	while (!has_fish(bowl) && byte_read > 0)
+	{
+		byte_read = read(fd, bucket, BUFFER_SIZE);
+		if (byte_read == -1)
+		{
+			free(bucket);
+			free(bowl);
+			return (NULL);
+		}
+		bucket[byte_read] = '\0';
+		bowl = ft_strjoin(bowl, bucket);
+		if (!bowl)
+		{
+			free(bucket);
+			return (NULL);
+		}
+	}
+	free(bucket);
+	return (bowl);
 }
 
-char	*ft_next(char *buffer)
+char	*extract_line(char *s)
 {
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 	char	*line;
 
-	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
-		i++;
-	if (!buffer[i])
-	{
-		free(buffer);
+	if (!s || !*s)
 		return (NULL);
-	}
-	line = ft_calloc((ft_strlen(buffer) - i + 1), sizeof (char));
-	i++;
+	i = 0;
+	while (s[i] && s[i] != '\n')
+		i++;
+	if (s[i] == '\n')
+		i++;
+	line = (char *)malloc(i + 1);
+	if (!line)
+		return (NULL);
 	j = 0;
-	while (buffer[i])
-		line[j++] = buffer[i++];
-	free(buffer);
+	if (j < i)
+	{
+		line[j] = s[j];
+		j++;
+	}
+	line[i] = '\0';
 	return (line);
 }
 
-char	*file_read(int fd, char *result)
+char	*save_leftovers(char *s)
 {
-	char	*buffer;
-	int		byte_read;
+	int	i;
+	char	*left;
 
-	if (!result)
-		result = ft_calloc(1, 1);
-	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	byte_read = 1;
-	while (byte_read > 0)
+	i = 0;
+	while (s[i] && s[i] != '\n')
+		i++;
+	if (!s[i])
 	{
-		byte_read = read(fd, buffer, BUFFER_SIZE);
-		if (byte_read == -1)
-		{
-			free(buffer);
-			free(result);
-			return (NULL);
-		}
-		buffer [byte_read] = 0;
-		result = ft_free (result, buffer);
-		if (ft_strchr(buffer, '\n'))
-			break ;
+		free(s);
+		return (NULL);
 	}
-	free(buffer);
-	return (result);
+	i++;
+	left = malloc(ft_strlen(s + i) + 1);
+	if (!left)
+	{
+		free(s);
+		return(NULL);
+	}
+	while (s[i])
+		left = ft_strjoin(left, s);
+	free(s);
+	return (left);
 }
+
+char *get_next_line(int fd)
+{
+	static char	*bowl;
+	char	*line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	bowl = read_file(fd, bowl);
+	if (!bowl)
+		return (NULL);
+	line = extract_line(bowl);
+	if (!line)
+	{
+		free(bowl);
+		bowl = NULL;
+		return (NULL);
+	}
+	bowl = save_leftovers(bowl);
+	return (line);
+}
+
+/*
+gnl?
+
+anywayyyy so for your information in case u didnt get to understand la
+static char * bowl is to remember la 
+read file tauu la
+extract line is to take untill \n
+keep leftovers is to put the left over inside the bowl after \n is extracted
+
+read file?
+ok what it does is creates bucket of buffer size
+search for \n 
+returns the leftovers to bowl when \n is found
+
+extract line?
+
+
+*/
