@@ -59,7 +59,7 @@ char	*extract_line(char *s)
 	if (!line)
 		return (NULL);
 	j = 0;
-	if (j < i)
+	while (j < i)
 	{
 		line[j] = s[j];
 		j++;
@@ -71,6 +71,7 @@ char	*extract_line(char *s)
 char	*save_leftovers(char *s)
 {
 	int	i;
+	int	j;
 	char	*left;
 
 	i = 0;
@@ -88,8 +89,10 @@ char	*save_leftovers(char *s)
 		free(s);
 		return(NULL);
 	}
+	j = 0;
 	while (s[i])
-		left = ft_strjoin(left, s);
+		left[j++] = s[i++];
+	left[j] = '\0';
 	free(s);
 	return (left);
 }

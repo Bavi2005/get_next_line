@@ -42,6 +42,8 @@ char	*ft_strdup(char *src)
 	int		i;
 	int		len;
 
+	if (!src)
+		return (NULL);
 	len = 0;
 	while (src[len])
 		len++;
@@ -66,7 +68,7 @@ char	*ft_strjoin(char *s1, const char *s2)
 
 	i = 0;
 	j = 0;
-	if (!s1 || !s2)
+	if (!s1 && !s2)
 		return (NULL);
 	if (!s1)
 		return (ft_strdup((char *)s2));
