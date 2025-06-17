@@ -12,10 +12,33 @@
 
 #include "get_next_line.h"
 
+char	*read_tukar(int fd, char *bowl, char *bucket, int *byte_read)
+{
+	char	*temp;
+
+	*byte_read = read(fd, bucket, BUFFER_SIZE);
+	if (*byte_read == -1)
+	{
+		free(bucket);
+		free(bowl);
+		return (NULL);
+	}
+	bucket[*byte_read] = '\0';
+	temp = bowl;
+	temp = ft_strjoin(bowl, bucket);
+	if (!temp)
+	{
+		free(bowl);
+		return (NULL);
+	}
+	free(bowl);
+	return (temp);
+}
+
 char	*read_file(int fd, char *bowl)
 {
 	char	*bucket;
-	int	byte_read;
+	int		byte_read;
 
 	byte_read = 1;
 	bucket = malloc(BUFFER_SIZE + 1);
@@ -23,20 +46,9 @@ char	*read_file(int fd, char *bowl)
 		return (NULL);
 	while (!has_fish(bowl) && byte_read > 0)
 	{
-		byte_read = read(fd, bucket, BUFFER_SIZE);
-		if (byte_read == -1)
-		{
-			free(bucket);
-			free(bowl);
-			return (NULL);
-		}
-		bucket[byte_read] = '\0';
-		bowl = ft_strjoin(bowl, bucket);
+		bowl = read_tukar(fd, bowl, bucket, &byte_read);
 		if (!bowl)
-		{
-			free(bucket);
 			return (NULL);
-		}
 	}
 	free(bucket);
 	return (bowl);
@@ -44,8 +56,8 @@ char	*read_file(int fd, char *bowl)
 
 char	*extract_line(char *s)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 	char	*line;
 
 	if (!s || !*s)
@@ -70,8 +82,8 @@ char	*extract_line(char *s)
 
 char	*save_leftovers(char *s)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 	char	*left;
 
 	i = 0;
@@ -87,7 +99,7 @@ char	*save_leftovers(char *s)
 	if (!left)
 	{
 		free(s);
-		return(NULL);
+		return (NULL);
 	}
 	j = 0;
 	while (s[i])
@@ -97,10 +109,10 @@ char	*save_leftovers(char *s)
 	return (left);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
 	static char	*bowl;
-	char	*line;
+	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);

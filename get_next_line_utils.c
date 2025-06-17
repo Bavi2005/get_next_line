@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpichyal <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: bpichyal <bpichyal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 16:24:28 by bpichyal          #+#    #+#             */
-/*   Updated: 2025/06/12 16:26:09 by bpichyal         ###   ########.fr       */
+/*   Updated: 2025/06/17 10:54:18 by bpichyal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ int	has_fish(char *s)
 	return (0);
 }
 
-
 char	*ft_strdup(char *src)
 {
 	char	*dest;
@@ -60,14 +59,27 @@ char	*ft_strdup(char *src)
 	return (dest);
 }
 
-char	*ft_strjoin(char *s1, const char *s2)
+static void	ft_copyjoin(char *new, char *s1, const char *s2)
 {
-	char	*new;
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
 	i = 0;
 	j = 0;
+	while (s1[i])
+	{
+		new[i] = s1[i];
+		i++;
+	}
+	while (s2[j])
+		new[i++] = s2[j++];
+	new[i] = '\0';
+}
+
+char	*ft_strjoin(char *s1, const char *s2)
+{
+	char	*new;
+
 	if (!s1 && !s2)
 		return (NULL);
 	if (!s1)
@@ -77,18 +89,6 @@ char	*ft_strjoin(char *s1, const char *s2)
 	new = (char *)malloc(sizeof(char) * ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!new)
 		return (NULL);
-	while (s1[i])
-	{
-		new[i] = s1[i];
-		i++;
-	}
-	while (s2[j])
-	{
-		new[i] = s2[j];
-		i++;
-		j++;
-	}
-	new[i] = '\0';
-	free(s1);
+	ft_copyjoin(new, s1, s2);
 	return (new);
 }
