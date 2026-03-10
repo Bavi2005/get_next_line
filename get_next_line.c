@@ -6,7 +6,7 @@
 /*   By: bpichyal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 14:51:07 by bpichyal          #+#    #+#             */
-/*   Updated: 2025/06/19 16:39:36 by bpichyal         ###   ########.fr       */
+/*   Updated: 2025/06/14 14:51:09 by bpichyal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,27 +130,6 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-#include <fcntl.h>
-#include <stdio.h>
-#include <unistd.h>
-
-int	main(void)
-{
-	int	fd;
-	char	*line;
-
-	fd = open("test.txt", O_RDONLY);
-	while (line)
-	{
-		line = get_next_line(fd);
-		printf("%s", line);
-		free(line);
-	}
-	close(fd);
-	return (0);
-}
-
-
 /*
 gnl?
 
@@ -166,6 +145,6 @@ search for \n
 returns the leftovers to bowl when \n is found
 
 extract line?
-
+im lasy to write illl explain la
 
 */
